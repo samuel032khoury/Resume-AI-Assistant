@@ -1,3 +1,8 @@
+import uuid, os, requests
+from datetime import datetime
+from django.http import HttpResponse
+
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -5,6 +10,8 @@ from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 
 from .services.parser import parse_modified_resume_to_json, parse_resume_file
 from .services.resume_enhancer import enhance_resume_content
+from .services.generate_html_from_json_resume import generate_html_from_json_resume
+from .services.generate_pdf_from_html import generate_pdf_from_html
 
 class ProfileView(APIView):    
     def get(self, request):
@@ -140,3 +147,58 @@ class EnhanceResumeView(APIView):
             return Response({
                 "error": f"Failed to process resume: {str(e)}"
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GenerateHTMLView(APIView):
+    parser_classes = [JSONParser, MultiPartParser, FormParser]
+    
+    def post(self, request):
+        json_resume = request.data.get("json_resume", {})
+        theme = request.data.get("theme", "flat")
+        
+        if not json_resume:
+            return Response({
+                "error": "Please provide a valid JSON resume"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            html_content = generate_html_from_json_resume(json_resume, theme)
+            return Response({
+                "html_content": html_content
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                "error": str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+           
+class DownloadPDFView(APIView):
+    parser_classes = [JSONParser, MultiPartParser, FormParser]
+
+    def post(self, request):
+        html_url = request.data.get("html_url", "").strip()
+        if not html_url:
+            return Response({
+                "error": "Please provide a valid HTML URL"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            response = requests.get(html_url)
+            if response.status_code != 200:
+                return Response({
+                    "error": "Failed to fetch HTML content from the provided URL"
+                }, status=status.HTTP_400_BAD_REQUEST)
+            html_content = response.text
+
+            current_date = datetime.now().strftime("%Y/%m/%d")
+            pdf_key = f"resumes/{current_date}/{uuid.uuid4().hex}.pdf"
+            temp_pdf_path = os.path.join("/tmp", pdf_key)
+            generate_pdf_from_html(html_content, temp_pdf_path)
+
+            #TODO: S3 Upload
+
+            
+
+        except Exception as e:
+            return Response({
+                "error": str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                
