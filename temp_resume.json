@@ -1,0 +1,93 @@
+{
+  "basics": {
+    "name": "John Smith",
+    "email": "john.smith@email.com",
+    "phone": "(555) 123-4567",
+    "location": {
+      "city": "San Francisco",
+      "region": "CA",
+      "countryCode": "US"
+    },
+    "url": "https://johnsmith.dev",
+    "summary": "Software Developer with over 3 years of experience in Python and JavaScript. Passionate about problem-solving and building scalable applications, with a proven track record of improving system efficiency and enhancing user experience."
+  },
+  "work": [
+    {
+      "name": "TechCorp Inc.",
+      "position": "Software Engineer",
+      "startDate": "2022-01",
+      "endDate": "Present",
+      "summary": "Develop and optimize web applications while ensuring high performance and responsiveness.",
+      "highlights": [
+        "Led a team to streamline code for web applications, resulting in a 30% increase in performance.",
+        "Implemented bug resolution strategies, reducing downtime by 15%.",
+        "Collaborated with cross-functional teams to deliver projects on schedule, enhancing team productivity by 20%.",
+        "Optimized database queries, improving data retrieval speed by 25%."
+      ]
+    },
+    {
+      "name": "StartupXYZ",
+      "position": "Junior Developer",
+      "startDate": "2021-06",
+      "endDate": "2021-12",
+      "summary": "Contributed to the development of web and mobile applications, gaining proficiency in new technologies.",
+      "highlights": [
+        "Spearheaded the development of three client websites, enhancing user engagement by 40%.",
+        "Acquired expertise in emerging technologies, which expedited project delivery by 15%.",
+        "Participated in the creation of a mobile app, improving user interaction metrics by 25%.",
+        "Conducted testing to ensure application stability, reducing bug incidence by 10%."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "State University",
+      "area": "Computer Science",
+      "studyType": "Bachelor of Science",
+      "startDate": "2017-09",
+      "endDate": "2021-05",
+      "gpa": "3.5"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Programming Languages",
+      "keywords": [
+        "Python",
+        "JavaScript",
+        "HTML",
+        "CSS",
+        "React",
+        "Node.js"
+      ]
+    },
+    {
+      "name": "Database Management",
+      "keywords": [
+        "MySQL"
+      ]
+    },
+    {
+      "name": "Version Control",
+      "keywords": [
+        "Git"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Personal Website",
+      "description": "Developed a portfolio website to showcase professional work and projects, utilizing HTML, CSS, and JavaScript.",
+      "highlights": [
+        "Demonstrated proficiency in front-end development, leading to a 50% increase in portfolio views."
+      ]
+    },
+    {
+      "name": "Task Manager App",
+      "description": "Created a task management application using React and Node.js, aimed at enhancing productivity and task organization.",
+      "highlights": [
+        "Achieved a 60% improvement in task tracking efficiency, as reported by users."
+      ]
+    }
+  ]
+}

@@ -8,10 +8,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 
-from .services.parser import parse_modified_resume_to_json, parse_resume_file
+from apps.resume.services.aws_s3 import upload_html_resume
+
+from .utils.parser import clean_and_convert_to_json, parse_pdf_to_text
 from .services.resume_enhancer import enhance_resume_content
-from .services.generate_html_from_json_resume import generate_html_from_json_resume
-from .services.generate_pdf_from_html import generate_pdf_from_html
+from .utils.resume_renderer import render_resume_html
+from .utils.html_to_pdf import generate_pdf_from_html
 
 class ProfileView(APIView):    
     def get(self, request):
@@ -95,7 +97,7 @@ class ParseResumeView(APIView):
         
         if not resume_text and resume_file:
             try:
-                resume_text = parse_resume_file(resume_file)
+                resume_text = parse_pdf_to_text(resume_file)
             except Exception as e:
                 return Response({
                     "error": f"Failed to parse file: {str(e)}"
@@ -123,7 +125,7 @@ class EnhanceResumeView(APIView):
 
         if not resume_text and resume_file:
             try:
-                resume_text = parse_resume_file(resume_file)
+                resume_text = parse_pdf_to_text(resume_file)
             except Exception as e:
                 return Response({
                     "error": f"Failed to parse file: {str(e)}"
@@ -136,10 +138,10 @@ class EnhanceResumeView(APIView):
 
         try:
             modified_resume = enhance_resume_content(resume_text, customized_info)
-            cleaned_resume = parse_modified_resume_to_json(modified_resume)
+            cleaned_resume = clean_and_convert_to_json(modified_resume)
 
             return Response({
-                "modified_resume": cleaned_resume
+                "json_resume": cleaned_resume
             }, status=status.HTTP_200_OK)
             
         except Exception as e:
@@ -161,9 +163,10 @@ class GenerateHTMLView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            html_content = generate_html_from_json_resume(json_resume, theme)
+            html_url, preview_url = upload_html_resume(json_resume, theme)
             return Response({
-                "html_content": html_content
+                "html_url": html_url,
+                "preview_url": preview_url
             }, status=status.HTTP_200_OK)
             
         except Exception as e:

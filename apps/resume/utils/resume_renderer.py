@@ -10,7 +10,7 @@ THEME_PATHS = {
     'stackoverflow': 'jsonresume-theme-stackoverflow',
 }
 
-def generate_html_from_json_resume(json_resume: dict, theme: str = 'flat') -> str:
+def render_resume_html(json_resume: dict, theme: str = 'flat') -> str:
     temp_json = os.path.join(settings.BASE_DIR, 'temp_resume.json')
     with open(temp_json, 'w', encoding="utf-8") as f:
         json.dump(json_resume, f, ensure_ascii=False, indent=2)
@@ -29,11 +29,11 @@ def generate_html_from_json_resume(json_resume: dict, theme: str = 'flat') -> st
         raise Exception(f"resume CLI error: {result.stderr.decode()}")
     with open(temp_html, 'r', encoding="utf-8") as f:
         html_content = f.read()
-    os.remove(temp_json)
-    os.remove(temp_html)
+    # os.remove(temp_json)
+    # os.remove(temp_html)
     return html_content
 
-def generate_preview_html(html_content):
+def apply_preview_blur_overlay(html_content):
     preview_html = f"""
     <html>
     <head>
