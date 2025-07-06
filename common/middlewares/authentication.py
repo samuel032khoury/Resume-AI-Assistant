@@ -20,7 +20,6 @@ class JWTAuthenticationMiddleware:
                 user = User.objects.get(id=user_id)
                 request.user = user
             except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, User.DoesNotExist):
-                # If token is invalid or user does not exist, set user to AnonymousUser
                 pass
 
         response = self.get_response(request)

@@ -29,12 +29,12 @@ def upload_html_resume(json_resume: str, theme: str) -> str:
         Filename=temp_html_path,
         Bucket=AWS_STORAGE_BUCKET_NAME,
         Key=file_name,
-        ExtraArgs={"ContentType": "text/html"})
+        ExtraArgs={"ContentType": "text/html", "ACL": "public-read"})
     s3_client.upload_file(
         Filename=temp_preview_path,
         Bucket=AWS_STORAGE_BUCKET_NAME,
         Key=preview_file_name,
-        ExtraArgs={"ContentType": "text/html"})
+        ExtraArgs={"ContentType": "text/html", "ACL": "public-read"})
     os.remove(temp_html_path)
     os.remove(temp_preview_path)
     html_url = f"{S3_BASE_URL}{file_name}"

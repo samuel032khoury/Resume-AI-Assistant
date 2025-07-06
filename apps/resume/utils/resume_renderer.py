@@ -8,6 +8,7 @@ THEME_PATHS = {
     'macchiato': 'jsonresume-theme-macchiato',
     'relaxed': 'jsonresume-theme-relaxed',
     'stackoverflow': 'jsonresume-theme-stackoverflow',
+    'engineering': 'jsonresume-theme-engineering',
 }
 
 def render_resume_html(json_resume: dict, theme: str = 'flat') -> str:
@@ -29,8 +30,8 @@ def render_resume_html(json_resume: dict, theme: str = 'flat') -> str:
         raise Exception(f"resume CLI error: {result.stderr.decode()}")
     with open(temp_html, 'r', encoding="utf-8") as f:
         html_content = f.read()
-    # os.remove(temp_json)
-    # os.remove(temp_html)
+    os.remove(temp_json)
+    os.remove(temp_html)
     return html_content
 
 def apply_preview_blur_overlay(html_content):

@@ -14,6 +14,7 @@ from .utils.parser import clean_and_convert_to_json, parse_pdf_to_text
 from .services.resume_enhancer import enhance_resume_content
 from .utils.resume_renderer import render_resume_html
 from .utils.html_to_pdf import generate_pdf_from_html
+from .config.aws_config import s3_client, AWS_STORAGE_BUCKET_NAME, S3_BASE_URL
 
 class ProfileView(APIView):    
     def get(self, request):
@@ -155,7 +156,7 @@ class GenerateHTMLView(APIView):
     
     def post(self, request):
         json_resume = request.data.get("json_resume", {})
-        theme = request.data.get("theme", "flat")
+        theme = request.data.get("theme", "engineering")
         
         if not json_resume:
             return Response({
@@ -196,7 +197,17 @@ class DownloadPDFView(APIView):
             temp_pdf_path = os.path.join("/tmp", pdf_key)
             generate_pdf_from_html(html_content, temp_pdf_path)
 
-            #TODO: S3 Upload
+            s3_client.upload_file(
+                Filename=temp_pdf_path,
+                Bucket=AWS_STORAGE_BUCKET_NAME,
+                Key=pdf_key,
+                ExtraArgs={"ContentType": "application/pdf", "ACL": "public-read"}
+            )
+            os.remove(temp_pdf_path)
+            pdf_url = f"{S3_BASE_URL}{pdf_key}"
+            return Response({
+                "pdf_url": pdf_url
+            }, status=status.HTTP_200_OK)
 
             
 
